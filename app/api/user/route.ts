@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { addUser, findUsers } from "@/app/services/user";
 import { handleResponse } from "../lib/next-api-utils";
 
@@ -8,15 +7,17 @@ export async function GET(req: Request) {
         name: searchParams.getAll("name"),
         id: searchParams.getAll("id"),
         email: searchParams.getAll("email"),
-        phone: searchParams.getAll("phone")
+        phone: searchParams.getAll("phone"),
+        role: [],
+        image: [],
+        password: [],
+        emailVerified: [],
+        createdAt: [],
+        updatedAt: []
     }));
 }
 
 export async function POST(req: Request) {
     const data = await req.json();
-    const res = await addUser(data);
-    if (res.error) {
-        return NextResponse.json(res.error);
-    }
-    return NextResponse.json(res.payload);
+    return handleResponse(addUser(data));
 }

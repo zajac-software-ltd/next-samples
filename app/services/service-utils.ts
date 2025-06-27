@@ -8,10 +8,11 @@ type UnmanagedError = {
 export type ServiceResult<T> =
     | {
         error: { statusCode: number; message?: string, errors?: UnmanagedError[] },
+        payload: never
     }
     | {
         payload: T,
-        error: null
+        error: never
     };
 
 export class ServicesError extends Error {
@@ -29,15 +30,13 @@ export class NotFoundError extends ServicesError {
     }
 }
 
-
-
-export function withErrorHandler<T extends any[], R>(
+export function withErrorHandler<T extends unknown[], R>(
     fn: (...args: T) => Promise<R>
 ): (...args: T) => Promise<ServiceResult<R>> {
     return async (...args: T): Promise<ServiceResult<R>> => {
         try {
             const payload = await fn(...args);
-            return { payload, error: null };
+            return { payload, error: undefined as never };
         } catch (error) {
             const { statusCode, message } = error as ServicesError;
 
@@ -46,29 +45,34 @@ export function withErrorHandler<T extends any[], R>(
                 Object.entries(JSON.parse(message)).forEach(([key, value]) => {
                     errorsInfo[key] = value;
                 });
-            } catch (_) {
+            } catch {
                 errorsInfo.message = message;
             }
 
             return {
-                error: errorsInfo
+                error: errorsInfo as { statusCode: number; message?: string, errors?: UnmanagedError[] },
+                payload: undefined as never
             };
         }
     };
 }
 
-export function withDelay<T extends (...args: any[]) => any>(
+export function withDelay<T extends (...args: never) => unknown>(
     fn: T,
     delay: number
-): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {
-    return async (...args: Parameters<T>): Promise<Awaited<ReturnType<T>>> => {
+): T extends (...args: infer P) => infer R ? (...args: P) => Promise<Awaited<R>> : never;
+export function withDelay(
+    fn: (...args: unknown[]) => unknown,
+    delay: number
+): (...args: unknown[]) => Promise<unknown> {
+    return async (...args: unknown[]): Promise<unknown> => {
         await new Promise(resolve => setTimeout(resolve, delay));
-        return fn(...args);
+        return await fn(...args);
     };
 }
 
 
-export function serviceWrapper<T extends any[], R>(
+export function serviceWrapper<T extends unknown[], R>(
     fn: (...args: T) => Promise<R>
   ): (...args: T) => Promise<ServiceResult<R>> {
     let wrapped: (...args: T) => Promise<ServiceResult<R>> = withErrorHandler(fn);
