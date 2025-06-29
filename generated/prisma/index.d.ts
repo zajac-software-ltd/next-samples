@@ -33,6 +33,11 @@ export type Session = $Result.DefaultSelection<Prisma.$SessionPayload>
  * 
  */
 export type VerificationToken = $Result.DefaultSelection<Prisma.$VerificationTokenPayload>
+/**
+ * Model TempSession
+ * 
+ */
+export type TempSession = $Result.DefaultSelection<Prisma.$TempSessionPayload>
 
 /**
  * Enums
@@ -215,6 +220,16 @@ export class PrismaClient<
     * ```
     */
   get verificationToken(): Prisma.VerificationTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tempSession`: Exposes CRUD operations for the **TempSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TempSessions
+    * const tempSessions = await prisma.tempSession.findMany()
+    * ```
+    */
+  get tempSession(): Prisma.TempSessionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -658,7 +673,8 @@ export namespace Prisma {
     User: 'User',
     Account: 'Account',
     Session: 'Session',
-    VerificationToken: 'VerificationToken'
+    VerificationToken: 'VerificationToken',
+    TempSession: 'TempSession'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -677,7 +693,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "account" | "session" | "verificationToken"
+      modelProps: "user" | "account" | "session" | "verificationToken" | "tempSession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -977,6 +993,80 @@ export namespace Prisma {
           }
         }
       }
+      TempSession: {
+        payload: Prisma.$TempSessionPayload<ExtArgs>
+        fields: Prisma.TempSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TempSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TempSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.TempSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TempSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload>
+          }
+          findMany: {
+            args: Prisma.TempSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload>[]
+          }
+          create: {
+            args: Prisma.TempSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload>
+          }
+          createMany: {
+            args: Prisma.TempSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TempSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.TempSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload>
+          }
+          update: {
+            args: Prisma.TempSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.TempSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TempSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TempSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.TempSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TempSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.TempSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTempSession>
+          }
+          groupBy: {
+            args: Prisma.TempSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TempSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TempSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<TempSessionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1065,6 +1155,7 @@ export namespace Prisma {
     account?: AccountOmit
     session?: SessionOmit
     verificationToken?: VerificationTokenOmit
+    tempSession?: TempSessionOmit
   }
 
   /* Types for Logging */
@@ -1161,11 +1252,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     accounts: number
     sessions: number
+    tempSessions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | UserCountOutputTypeCountAccountsArgs
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+    tempSessions?: boolean | UserCountOutputTypeCountTempSessionsArgs
   }
 
   // Custom InputTypes
@@ -1191,6 +1284,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SessionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTempSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TempSessionWhereInput
   }
 
 
@@ -1462,6 +1562,7 @@ export namespace Prisma {
     isClaimed?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
+    tempSessions?: boolean | User$tempSessionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1517,6 +1618,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
+    tempSessions?: boolean | User$tempSessionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1527,6 +1629,7 @@ export namespace Prisma {
     objects: {
       accounts: Prisma.$AccountPayload<ExtArgs>[]
       sessions: Prisma.$SessionPayload<ExtArgs>[]
+      tempSessions: Prisma.$TempSessionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -1938,6 +2041,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     accounts<T extends User$accountsArgs<ExtArgs> = {}>(args?: Subset<T, User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tempSessions<T extends User$tempSessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$tempSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2413,6 +2517,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SessionScalarFieldEnum | SessionScalarFieldEnum[]
+  }
+
+  /**
+   * User.tempSessions
+   */
+  export type User$tempSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    where?: TempSessionWhereInput
+    orderBy?: TempSessionOrderByWithRelationInput | TempSessionOrderByWithRelationInput[]
+    cursor?: TempSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TempSessionScalarFieldEnum | TempSessionScalarFieldEnum[]
   }
 
   /**
@@ -5670,6 +5798,1102 @@ export namespace Prisma {
 
 
   /**
+   * Model TempSession
+   */
+
+  export type AggregateTempSession = {
+    _count: TempSessionCountAggregateOutputType | null
+    _avg: TempSessionAvgAggregateOutputType | null
+    _sum: TempSessionSumAggregateOutputType | null
+    _min: TempSessionMinAggregateOutputType | null
+    _max: TempSessionMaxAggregateOutputType | null
+  }
+
+  export type TempSessionAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type TempSessionSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type TempSessionMinAggregateOutputType = {
+    id: number | null
+    token: string | null
+    userId: number | null
+    expiresAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type TempSessionMaxAggregateOutputType = {
+    id: number | null
+    token: string | null
+    userId: number | null
+    expiresAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type TempSessionCountAggregateOutputType = {
+    id: number
+    token: number
+    userId: number
+    expiresAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TempSessionAvgAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type TempSessionSumAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type TempSessionMinAggregateInputType = {
+    id?: true
+    token?: true
+    userId?: true
+    expiresAt?: true
+    createdAt?: true
+  }
+
+  export type TempSessionMaxAggregateInputType = {
+    id?: true
+    token?: true
+    userId?: true
+    expiresAt?: true
+    createdAt?: true
+  }
+
+  export type TempSessionCountAggregateInputType = {
+    id?: true
+    token?: true
+    userId?: true
+    expiresAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TempSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TempSession to aggregate.
+     */
+    where?: TempSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TempSessions to fetch.
+     */
+    orderBy?: TempSessionOrderByWithRelationInput | TempSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TempSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TempSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TempSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TempSessions
+    **/
+    _count?: true | TempSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TempSessionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TempSessionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TempSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TempSessionMaxAggregateInputType
+  }
+
+  export type GetTempSessionAggregateType<T extends TempSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateTempSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTempSession[P]>
+      : GetScalarType<T[P], AggregateTempSession[P]>
+  }
+
+
+
+
+  export type TempSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TempSessionWhereInput
+    orderBy?: TempSessionOrderByWithAggregationInput | TempSessionOrderByWithAggregationInput[]
+    by: TempSessionScalarFieldEnum[] | TempSessionScalarFieldEnum
+    having?: TempSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TempSessionCountAggregateInputType | true
+    _avg?: TempSessionAvgAggregateInputType
+    _sum?: TempSessionSumAggregateInputType
+    _min?: TempSessionMinAggregateInputType
+    _max?: TempSessionMaxAggregateInputType
+  }
+
+  export type TempSessionGroupByOutputType = {
+    id: number
+    token: string
+    userId: number
+    expiresAt: Date
+    createdAt: Date
+    _count: TempSessionCountAggregateOutputType | null
+    _avg: TempSessionAvgAggregateOutputType | null
+    _sum: TempSessionSumAggregateOutputType | null
+    _min: TempSessionMinAggregateOutputType | null
+    _max: TempSessionMaxAggregateOutputType | null
+  }
+
+  type GetTempSessionGroupByPayload<T extends TempSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TempSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TempSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TempSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], TempSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TempSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    token?: boolean
+    userId?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tempSession"]>
+
+  export type TempSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    token?: boolean
+    userId?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tempSession"]>
+
+  export type TempSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    token?: boolean
+    userId?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tempSession"]>
+
+  export type TempSessionSelectScalar = {
+    id?: boolean
+    token?: boolean
+    userId?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type TempSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "token" | "userId" | "expiresAt" | "createdAt", ExtArgs["result"]["tempSession"]>
+  export type TempSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TempSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TempSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TempSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TempSession"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      token: string
+      userId: number
+      expiresAt: Date
+      createdAt: Date
+    }, ExtArgs["result"]["tempSession"]>
+    composites: {}
+  }
+
+  type TempSessionGetPayload<S extends boolean | null | undefined | TempSessionDefaultArgs> = $Result.GetResult<Prisma.$TempSessionPayload, S>
+
+  type TempSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TempSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TempSessionCountAggregateInputType | true
+    }
+
+  export interface TempSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TempSession'], meta: { name: 'TempSession' } }
+    /**
+     * Find zero or one TempSession that matches the filter.
+     * @param {TempSessionFindUniqueArgs} args - Arguments to find a TempSession
+     * @example
+     * // Get one TempSession
+     * const tempSession = await prisma.tempSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TempSessionFindUniqueArgs>(args: SelectSubset<T, TempSessionFindUniqueArgs<ExtArgs>>): Prisma__TempSessionClient<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TempSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TempSessionFindUniqueOrThrowArgs} args - Arguments to find a TempSession
+     * @example
+     * // Get one TempSession
+     * const tempSession = await prisma.tempSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TempSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, TempSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TempSessionClient<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TempSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TempSessionFindFirstArgs} args - Arguments to find a TempSession
+     * @example
+     * // Get one TempSession
+     * const tempSession = await prisma.tempSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TempSessionFindFirstArgs>(args?: SelectSubset<T, TempSessionFindFirstArgs<ExtArgs>>): Prisma__TempSessionClient<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TempSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TempSessionFindFirstOrThrowArgs} args - Arguments to find a TempSession
+     * @example
+     * // Get one TempSession
+     * const tempSession = await prisma.tempSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TempSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, TempSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__TempSessionClient<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TempSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TempSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TempSessions
+     * const tempSessions = await prisma.tempSession.findMany()
+     * 
+     * // Get first 10 TempSessions
+     * const tempSessions = await prisma.tempSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tempSessionWithIdOnly = await prisma.tempSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TempSessionFindManyArgs>(args?: SelectSubset<T, TempSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TempSession.
+     * @param {TempSessionCreateArgs} args - Arguments to create a TempSession.
+     * @example
+     * // Create one TempSession
+     * const TempSession = await prisma.tempSession.create({
+     *   data: {
+     *     // ... data to create a TempSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends TempSessionCreateArgs>(args: SelectSubset<T, TempSessionCreateArgs<ExtArgs>>): Prisma__TempSessionClient<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TempSessions.
+     * @param {TempSessionCreateManyArgs} args - Arguments to create many TempSessions.
+     * @example
+     * // Create many TempSessions
+     * const tempSession = await prisma.tempSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TempSessionCreateManyArgs>(args?: SelectSubset<T, TempSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TempSessions and returns the data saved in the database.
+     * @param {TempSessionCreateManyAndReturnArgs} args - Arguments to create many TempSessions.
+     * @example
+     * // Create many TempSessions
+     * const tempSession = await prisma.tempSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TempSessions and only return the `id`
+     * const tempSessionWithIdOnly = await prisma.tempSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TempSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, TempSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TempSession.
+     * @param {TempSessionDeleteArgs} args - Arguments to delete one TempSession.
+     * @example
+     * // Delete one TempSession
+     * const TempSession = await prisma.tempSession.delete({
+     *   where: {
+     *     // ... filter to delete one TempSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TempSessionDeleteArgs>(args: SelectSubset<T, TempSessionDeleteArgs<ExtArgs>>): Prisma__TempSessionClient<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TempSession.
+     * @param {TempSessionUpdateArgs} args - Arguments to update one TempSession.
+     * @example
+     * // Update one TempSession
+     * const tempSession = await prisma.tempSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TempSessionUpdateArgs>(args: SelectSubset<T, TempSessionUpdateArgs<ExtArgs>>): Prisma__TempSessionClient<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TempSessions.
+     * @param {TempSessionDeleteManyArgs} args - Arguments to filter TempSessions to delete.
+     * @example
+     * // Delete a few TempSessions
+     * const { count } = await prisma.tempSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TempSessionDeleteManyArgs>(args?: SelectSubset<T, TempSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TempSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TempSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TempSessions
+     * const tempSession = await prisma.tempSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TempSessionUpdateManyArgs>(args: SelectSubset<T, TempSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TempSessions and returns the data updated in the database.
+     * @param {TempSessionUpdateManyAndReturnArgs} args - Arguments to update many TempSessions.
+     * @example
+     * // Update many TempSessions
+     * const tempSession = await prisma.tempSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TempSessions and only return the `id`
+     * const tempSessionWithIdOnly = await prisma.tempSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TempSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, TempSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TempSession.
+     * @param {TempSessionUpsertArgs} args - Arguments to update or create a TempSession.
+     * @example
+     * // Update or create a TempSession
+     * const tempSession = await prisma.tempSession.upsert({
+     *   create: {
+     *     // ... data to create a TempSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TempSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TempSessionUpsertArgs>(args: SelectSubset<T, TempSessionUpsertArgs<ExtArgs>>): Prisma__TempSessionClient<$Result.GetResult<Prisma.$TempSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TempSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TempSessionCountArgs} args - Arguments to filter TempSessions to count.
+     * @example
+     * // Count the number of TempSessions
+     * const count = await prisma.tempSession.count({
+     *   where: {
+     *     // ... the filter for the TempSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends TempSessionCountArgs>(
+      args?: Subset<T, TempSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TempSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TempSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TempSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TempSessionAggregateArgs>(args: Subset<T, TempSessionAggregateArgs>): Prisma.PrismaPromise<GetTempSessionAggregateType<T>>
+
+    /**
+     * Group by TempSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TempSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TempSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TempSessionGroupByArgs['orderBy'] }
+        : { orderBy?: TempSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TempSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTempSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TempSession model
+   */
+  readonly fields: TempSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TempSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TempSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TempSession model
+   */
+  interface TempSessionFieldRefs {
+    readonly id: FieldRef<"TempSession", 'Int'>
+    readonly token: FieldRef<"TempSession", 'String'>
+    readonly userId: FieldRef<"TempSession", 'Int'>
+    readonly expiresAt: FieldRef<"TempSession", 'DateTime'>
+    readonly createdAt: FieldRef<"TempSession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TempSession findUnique
+   */
+  export type TempSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TempSession to fetch.
+     */
+    where: TempSessionWhereUniqueInput
+  }
+
+  /**
+   * TempSession findUniqueOrThrow
+   */
+  export type TempSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TempSession to fetch.
+     */
+    where: TempSessionWhereUniqueInput
+  }
+
+  /**
+   * TempSession findFirst
+   */
+  export type TempSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TempSession to fetch.
+     */
+    where?: TempSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TempSessions to fetch.
+     */
+    orderBy?: TempSessionOrderByWithRelationInput | TempSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TempSessions.
+     */
+    cursor?: TempSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TempSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TempSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TempSessions.
+     */
+    distinct?: TempSessionScalarFieldEnum | TempSessionScalarFieldEnum[]
+  }
+
+  /**
+   * TempSession findFirstOrThrow
+   */
+  export type TempSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TempSession to fetch.
+     */
+    where?: TempSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TempSessions to fetch.
+     */
+    orderBy?: TempSessionOrderByWithRelationInput | TempSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TempSessions.
+     */
+    cursor?: TempSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TempSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TempSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TempSessions.
+     */
+    distinct?: TempSessionScalarFieldEnum | TempSessionScalarFieldEnum[]
+  }
+
+  /**
+   * TempSession findMany
+   */
+  export type TempSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TempSessions to fetch.
+     */
+    where?: TempSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TempSessions to fetch.
+     */
+    orderBy?: TempSessionOrderByWithRelationInput | TempSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TempSessions.
+     */
+    cursor?: TempSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TempSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TempSessions.
+     */
+    skip?: number
+    distinct?: TempSessionScalarFieldEnum | TempSessionScalarFieldEnum[]
+  }
+
+  /**
+   * TempSession create
+   */
+  export type TempSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TempSession.
+     */
+    data: XOR<TempSessionCreateInput, TempSessionUncheckedCreateInput>
+  }
+
+  /**
+   * TempSession createMany
+   */
+  export type TempSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TempSessions.
+     */
+    data: TempSessionCreateManyInput | TempSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TempSession createManyAndReturn
+   */
+  export type TempSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many TempSessions.
+     */
+    data: TempSessionCreateManyInput | TempSessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TempSession update
+   */
+  export type TempSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TempSession.
+     */
+    data: XOR<TempSessionUpdateInput, TempSessionUncheckedUpdateInput>
+    /**
+     * Choose, which TempSession to update.
+     */
+    where: TempSessionWhereUniqueInput
+  }
+
+  /**
+   * TempSession updateMany
+   */
+  export type TempSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TempSessions.
+     */
+    data: XOR<TempSessionUpdateManyMutationInput, TempSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which TempSessions to update
+     */
+    where?: TempSessionWhereInput
+    /**
+     * Limit how many TempSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TempSession updateManyAndReturn
+   */
+  export type TempSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update TempSessions.
+     */
+    data: XOR<TempSessionUpdateManyMutationInput, TempSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which TempSessions to update
+     */
+    where?: TempSessionWhereInput
+    /**
+     * Limit how many TempSessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TempSession upsert
+   */
+  export type TempSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TempSession to update in case it exists.
+     */
+    where: TempSessionWhereUniqueInput
+    /**
+     * In case the TempSession found by the `where` argument doesn't exist, create a new TempSession with this data.
+     */
+    create: XOR<TempSessionCreateInput, TempSessionUncheckedCreateInput>
+    /**
+     * In case the TempSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TempSessionUpdateInput, TempSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * TempSession delete
+   */
+  export type TempSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+    /**
+     * Filter which TempSession to delete.
+     */
+    where: TempSessionWhereUniqueInput
+  }
+
+  /**
+   * TempSession deleteMany
+   */
+  export type TempSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TempSessions to delete
+     */
+    where?: TempSessionWhereInput
+    /**
+     * Limit how many TempSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TempSession without action
+   */
+  export type TempSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TempSession
+     */
+    select?: TempSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TempSession
+     */
+    omit?: TempSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TempSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5737,6 +6961,17 @@ export namespace Prisma {
   };
 
   export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
+
+
+  export const TempSessionScalarFieldEnum: {
+    id: 'id',
+    token: 'token',
+    userId: 'userId',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt'
+  };
+
+  export type TempSessionScalarFieldEnum = (typeof TempSessionScalarFieldEnum)[keyof typeof TempSessionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5867,6 +7102,7 @@ export namespace Prisma {
     isClaimed?: BoolFilter<"User"> | boolean
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
+    tempSessions?: TempSessionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -5885,6 +7121,7 @@ export namespace Prisma {
     isClaimed?: SortOrder
     accounts?: AccountOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
+    tempSessions?: TempSessionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -5906,6 +7143,7 @@ export namespace Prisma {
     isClaimed?: BoolFilter<"User"> | boolean
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
+    tempSessions?: TempSessionListRelationFilter
   }, "id" | "email" | "claimToken">
 
   export type UserOrderByWithAggregationInput = {
@@ -6136,6 +7374,63 @@ export namespace Prisma {
     expires?: DateTimeWithAggregatesFilter<"VerificationToken"> | Date | string
   }
 
+  export type TempSessionWhereInput = {
+    AND?: TempSessionWhereInput | TempSessionWhereInput[]
+    OR?: TempSessionWhereInput[]
+    NOT?: TempSessionWhereInput | TempSessionWhereInput[]
+    id?: IntFilter<"TempSession"> | number
+    token?: StringFilter<"TempSession"> | string
+    userId?: IntFilter<"TempSession"> | number
+    expiresAt?: DateTimeFilter<"TempSession"> | Date | string
+    createdAt?: DateTimeFilter<"TempSession"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type TempSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type TempSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    token?: string
+    AND?: TempSessionWhereInput | TempSessionWhereInput[]
+    OR?: TempSessionWhereInput[]
+    NOT?: TempSessionWhereInput | TempSessionWhereInput[]
+    userId?: IntFilter<"TempSession"> | number
+    expiresAt?: DateTimeFilter<"TempSession"> | Date | string
+    createdAt?: DateTimeFilter<"TempSession"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "token">
+
+  export type TempSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    _count?: TempSessionCountOrderByAggregateInput
+    _avg?: TempSessionAvgOrderByAggregateInput
+    _max?: TempSessionMaxOrderByAggregateInput
+    _min?: TempSessionMinOrderByAggregateInput
+    _sum?: TempSessionSumOrderByAggregateInput
+  }
+
+  export type TempSessionScalarWhereWithAggregatesInput = {
+    AND?: TempSessionScalarWhereWithAggregatesInput | TempSessionScalarWhereWithAggregatesInput[]
+    OR?: TempSessionScalarWhereWithAggregatesInput[]
+    NOT?: TempSessionScalarWhereWithAggregatesInput | TempSessionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TempSession"> | number
+    token?: StringWithAggregatesFilter<"TempSession"> | string
+    userId?: IntWithAggregatesFilter<"TempSession"> | number
+    expiresAt?: DateTimeWithAggregatesFilter<"TempSession"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"TempSession"> | Date | string
+  }
+
   export type UserCreateInput = {
     name?: string | null
     email: string
@@ -6151,6 +7446,7 @@ export namespace Prisma {
     isClaimed?: boolean
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
+    tempSessions?: TempSessionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -6169,6 +7465,7 @@ export namespace Prisma {
     isClaimed?: boolean
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tempSessions?: TempSessionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -6186,6 +7483,7 @@ export namespace Prisma {
     isClaimed?: BoolFieldUpdateOperationsInput | boolean
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    tempSessions?: TempSessionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -6204,6 +7502,7 @@ export namespace Prisma {
     isClaimed?: BoolFieldUpdateOperationsInput | boolean
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tempSessions?: TempSessionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -6447,6 +7746,58 @@ export namespace Prisma {
     expires?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TempSessionCreateInput = {
+    token: string
+    expiresAt: Date | string
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutTempSessionsInput
+  }
+
+  export type TempSessionUncheckedCreateInput = {
+    id?: number
+    token: string
+    userId: number
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TempSessionUpdateInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTempSessionsNestedInput
+  }
+
+  export type TempSessionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TempSessionCreateManyInput = {
+    id?: number
+    token: string
+    userId: number
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TempSessionUpdateManyMutationInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TempSessionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -6534,6 +7885,12 @@ export namespace Prisma {
     none?: SessionWhereInput
   }
 
+  export type TempSessionListRelationFilter = {
+    every?: TempSessionWhereInput
+    some?: TempSessionWhereInput
+    none?: TempSessionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -6544,6 +7901,10 @@ export namespace Prisma {
   }
 
   export type SessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TempSessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -6845,6 +8206,40 @@ export namespace Prisma {
     expires?: SortOrder
   }
 
+  export type TempSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TempSessionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type TempSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TempSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TempSessionSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
   export type AccountCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -6859,6 +8254,13 @@ export namespace Prisma {
     connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
   }
 
+  export type TempSessionCreateNestedManyWithoutUserInput = {
+    create?: XOR<TempSessionCreateWithoutUserInput, TempSessionUncheckedCreateWithoutUserInput> | TempSessionCreateWithoutUserInput[] | TempSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TempSessionCreateOrConnectWithoutUserInput | TempSessionCreateOrConnectWithoutUserInput[]
+    createMany?: TempSessionCreateManyUserInputEnvelope
+    connect?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -6871,6 +8273,13 @@ export namespace Prisma {
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
     createMany?: SessionCreateManyUserInputEnvelope
     connect?: SessionWhereUniqueInput | SessionWhereUniqueInput[]
+  }
+
+  export type TempSessionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TempSessionCreateWithoutUserInput, TempSessionUncheckedCreateWithoutUserInput> | TempSessionCreateWithoutUserInput[] | TempSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TempSessionCreateOrConnectWithoutUserInput | TempSessionCreateOrConnectWithoutUserInput[]
+    createMany?: TempSessionCreateManyUserInputEnvelope
+    connect?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
@@ -6925,6 +8334,20 @@ export namespace Prisma {
     deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
   }
 
+  export type TempSessionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TempSessionCreateWithoutUserInput, TempSessionUncheckedCreateWithoutUserInput> | TempSessionCreateWithoutUserInput[] | TempSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TempSessionCreateOrConnectWithoutUserInput | TempSessionCreateOrConnectWithoutUserInput[]
+    upsert?: TempSessionUpsertWithWhereUniqueWithoutUserInput | TempSessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TempSessionCreateManyUserInputEnvelope
+    set?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
+    disconnect?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
+    delete?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
+    connect?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
+    update?: TempSessionUpdateWithWhereUniqueWithoutUserInput | TempSessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TempSessionUpdateManyWithWhereWithoutUserInput | TempSessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TempSessionScalarWhereInput | TempSessionScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -6961,6 +8384,20 @@ export namespace Prisma {
     deleteMany?: SessionScalarWhereInput | SessionScalarWhereInput[]
   }
 
+  export type TempSessionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TempSessionCreateWithoutUserInput, TempSessionUncheckedCreateWithoutUserInput> | TempSessionCreateWithoutUserInput[] | TempSessionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TempSessionCreateOrConnectWithoutUserInput | TempSessionCreateOrConnectWithoutUserInput[]
+    upsert?: TempSessionUpsertWithWhereUniqueWithoutUserInput | TempSessionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TempSessionCreateManyUserInputEnvelope
+    set?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
+    disconnect?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
+    delete?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
+    connect?: TempSessionWhereUniqueInput | TempSessionWhereUniqueInput[]
+    update?: TempSessionUpdateWithWhereUniqueWithoutUserInput | TempSessionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TempSessionUpdateManyWithWhereWithoutUserInput | TempSessionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TempSessionScalarWhereInput | TempSessionScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutAccountsInput = {
     create?: XOR<UserCreateWithoutAccountsInput, UserUncheckedCreateWithoutAccountsInput>
     connectOrCreate?: UserCreateOrConnectWithoutAccountsInput
@@ -6995,6 +8432,20 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutSessionsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSessionsInput, UserUpdateWithoutSessionsInput>, UserUncheckedUpdateWithoutSessionsInput>
+  }
+
+  export type UserCreateNestedOneWithoutTempSessionsInput = {
+    create?: XOR<UserCreateWithoutTempSessionsInput, UserUncheckedCreateWithoutTempSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTempSessionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutTempSessionsNestedInput = {
+    create?: XOR<UserCreateWithoutTempSessionsInput, UserUncheckedCreateWithoutTempSessionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTempSessionsInput
+    upsert?: UserUpsertWithoutTempSessionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTempSessionsInput, UserUpdateWithoutTempSessionsInput>, UserUncheckedUpdateWithoutTempSessionsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -7275,6 +8726,29 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TempSessionCreateWithoutUserInput = {
+    token: string
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TempSessionUncheckedCreateWithoutUserInput = {
+    id?: number
+    token: string
+    expiresAt: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TempSessionCreateOrConnectWithoutUserInput = {
+    where: TempSessionWhereUniqueInput
+    create: XOR<TempSessionCreateWithoutUserInput, TempSessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type TempSessionCreateManyUserInputEnvelope = {
+    data: TempSessionCreateManyUserInput | TempSessionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccountUpsertWithWhereUniqueWithoutUserInput = {
     where: AccountWhereUniqueInput
     update: XOR<AccountUpdateWithoutUserInput, AccountUncheckedUpdateWithoutUserInput>
@@ -7335,6 +8809,33 @@ export namespace Prisma {
     expires?: DateTimeFilter<"Session"> | Date | string
   }
 
+  export type TempSessionUpsertWithWhereUniqueWithoutUserInput = {
+    where: TempSessionWhereUniqueInput
+    update: XOR<TempSessionUpdateWithoutUserInput, TempSessionUncheckedUpdateWithoutUserInput>
+    create: XOR<TempSessionCreateWithoutUserInput, TempSessionUncheckedCreateWithoutUserInput>
+  }
+
+  export type TempSessionUpdateWithWhereUniqueWithoutUserInput = {
+    where: TempSessionWhereUniqueInput
+    data: XOR<TempSessionUpdateWithoutUserInput, TempSessionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TempSessionUpdateManyWithWhereWithoutUserInput = {
+    where: TempSessionScalarWhereInput
+    data: XOR<TempSessionUpdateManyMutationInput, TempSessionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TempSessionScalarWhereInput = {
+    AND?: TempSessionScalarWhereInput | TempSessionScalarWhereInput[]
+    OR?: TempSessionScalarWhereInput[]
+    NOT?: TempSessionScalarWhereInput | TempSessionScalarWhereInput[]
+    id?: IntFilter<"TempSession"> | number
+    token?: StringFilter<"TempSession"> | string
+    userId?: IntFilter<"TempSession"> | number
+    expiresAt?: DateTimeFilter<"TempSession"> | Date | string
+    createdAt?: DateTimeFilter<"TempSession"> | Date | string
+  }
+
   export type UserCreateWithoutAccountsInput = {
     name?: string | null
     email: string
@@ -7349,6 +8850,7 @@ export namespace Prisma {
     claimTokenExpires?: Date | string | null
     isClaimed?: boolean
     sessions?: SessionCreateNestedManyWithoutUserInput
+    tempSessions?: TempSessionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -7366,6 +8868,7 @@ export namespace Prisma {
     claimTokenExpires?: Date | string | null
     isClaimed?: boolean
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    tempSessions?: TempSessionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -7398,6 +8901,7 @@ export namespace Prisma {
     claimTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isClaimed?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUpdateManyWithoutUserNestedInput
+    tempSessions?: TempSessionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -7415,6 +8919,7 @@ export namespace Prisma {
     claimTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isClaimed?: BoolFieldUpdateOperationsInput | boolean
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    tempSessions?: TempSessionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -7431,6 +8936,7 @@ export namespace Prisma {
     claimTokenExpires?: Date | string | null
     isClaimed?: boolean
     accounts?: AccountCreateNestedManyWithoutUserInput
+    tempSessions?: TempSessionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -7448,6 +8954,7 @@ export namespace Prisma {
     claimTokenExpires?: Date | string | null
     isClaimed?: boolean
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    tempSessions?: TempSessionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -7480,6 +8987,7 @@ export namespace Prisma {
     claimTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isClaimed?: BoolFieldUpdateOperationsInput | boolean
     accounts?: AccountUpdateManyWithoutUserNestedInput
+    tempSessions?: TempSessionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -7497,6 +9005,93 @@ export namespace Prisma {
     claimTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isClaimed?: BoolFieldUpdateOperationsInput | boolean
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    tempSessions?: TempSessionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutTempSessionsInput = {
+    name?: string | null
+    email: string
+    phone?: string | null
+    password?: string | null
+    role?: $Enums.UserRole
+    emailVerified?: Date | string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    claimToken?: string | null
+    claimTokenExpires?: Date | string | null
+    isClaimed?: boolean
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTempSessionsInput = {
+    id?: number
+    name?: string | null
+    email: string
+    phone?: string | null
+    password?: string | null
+    role?: $Enums.UserRole
+    emailVerified?: Date | string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    claimToken?: string | null
+    claimTokenExpires?: Date | string | null
+    isClaimed?: boolean
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTempSessionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTempSessionsInput, UserUncheckedCreateWithoutTempSessionsInput>
+  }
+
+  export type UserUpsertWithoutTempSessionsInput = {
+    update: XOR<UserUpdateWithoutTempSessionsInput, UserUncheckedUpdateWithoutTempSessionsInput>
+    create: XOR<UserCreateWithoutTempSessionsInput, UserUncheckedCreateWithoutTempSessionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTempSessionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTempSessionsInput, UserUncheckedUpdateWithoutTempSessionsInput>
+  }
+
+  export type UserUpdateWithoutTempSessionsInput = {
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    claimToken?: NullableStringFieldUpdateOperationsInput | string | null
+    claimTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isClaimed?: BoolFieldUpdateOperationsInput | boolean
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTempSessionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    claimToken?: NullableStringFieldUpdateOperationsInput | string | null
+    claimTokenExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isClaimed?: BoolFieldUpdateOperationsInput | boolean
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -7517,6 +9112,13 @@ export namespace Prisma {
     id?: string
     sessionToken: string
     expires: Date | string
+  }
+
+  export type TempSessionCreateManyUserInput = {
+    id?: number
+    token: string
+    expiresAt: Date | string
+    createdAt?: Date | string
   }
 
   export type AccountUpdateWithoutUserInput = {
@@ -7577,6 +9179,26 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     sessionToken?: StringFieldUpdateOperationsInput | string
     expires?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TempSessionUpdateWithoutUserInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TempSessionUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TempSessionUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

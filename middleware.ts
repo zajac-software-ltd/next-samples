@@ -43,6 +43,11 @@ export async function middleware(req: NextRequest) {
     return response;
   }
 
+  // Service API routes bypass user authentication (they have their own auth)
+  if (pathname.startsWith('/api/service')) {
+    return NextResponse.next();
+  }
+
   // Protect API routes that require authentication
   if (pathname.startsWith('/api/users') || 
       pathname.startsWith('/api/admin')) {
@@ -65,6 +70,7 @@ export const config = {
     "/dashboard/:path*",
     "/admin/:path*",
     "/api/users/:path*",
-    "/api/admin/:path*"
+    "/api/admin/:path*",
+    "/api/service/:path*"
   ]
 }

@@ -1,0 +1,438 @@
+{
+	"info": {
+		"_postman_id": "service-auth-collection",
+		"name": "Service Authentication API",
+		"description": "Complete test suite for JWT and Enhanced Authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔑 Token Management",
+			"item": [
+				{
+					"name": "Get Available Scopes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/dev/generate-token",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dev", "generate-token"]
+						}
+					}
+				},
+				{
+					"name": "Generate JWT Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('jwtToken', response.token);",
+									"    console.log('JWT Token set in environment');",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"issuer\": \"postman-test\",\n  \"scopes\": [\"user:read\", \"user:create\", \"invite:send\"],\n  \"expiresIn\": \"24h\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/dev/generate-token",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "dev", "generate-token"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "📝 Standard JWT Auth",
+			"item": [
+				{
+					"name": "Get Users (Standard)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/service/users?page=1&limit=5",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "service", "users"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create User (Standard)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Standard Auth User\",\n  \"email\": \"standard-{{$timestamp}}@example.com\",\n  \"role\": \"USER\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/service/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "service", "users"]
+						}
+					}
+				},
+				{
+					"name": "Send Invitation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Invited User\",\n  \"email\": \"invite-{{$timestamp}}@example.com\",\n  \"role\": \"USER\",\n  \"expiresInHours\": 24\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/service/invites",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "service", "invites"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🔐 Enhanced Auth",
+			"item": [
+				{
+					"name": "Get Users (Enhanced)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Enhanced Authentication Pre-request Script",
+									"const crypto = require('crypto-js');",
+									"",
+									"// Get environment variables",
+									"const plainSecret = pm.environment.get('plainSecret');",
+									"const clientId = pm.environment.get('clientId');",
+									"",
+									"if (!plainSecret) {",
+									"    throw new Error('plainSecret not set in environment. Set MAIN_APP_SERVICE_SECRET value.');",
+									"}",
+									"",
+									"// Generate timestamp and nonce",
+									"const timestamp = Date.now();",
+									"const nonce = crypto.lib.WordArray.random(16).toString();",
+									"",
+									"// Get request details",
+									"const method = pm.request.method;",
+									"const url = new URL(pm.request.url.toString());",
+									"const path = url.pathname;",
+									"",
+									"// Generate hash: secret + timestamp + nonce + method + path",
+									"const payload = `${plainSecret}:${timestamp}:${nonce}:${method}:${path}`;",
+									"const hash = crypto.SHA256(payload).toString();",
+									"",
+									"// Set headers",
+									"pm.request.headers.add({",
+									"    key: 'X-Client-ID',",
+									"    value: clientId",
+									"});",
+									"",
+									"pm.request.headers.add({",
+									"    key: 'X-Auth-Timestamp',",
+									"    value: timestamp.toString()",
+									"});",
+									"",
+									"pm.request.headers.add({",
+									"    key: 'X-Auth-Nonce',",
+									"    value: nonce",
+									"});",
+									"",
+									"pm.request.headers.add({",
+									"    key: 'X-Auth-Hash',",
+									"    value: hash",
+									"});",
+									"",
+									"// Log for debugging",
+									"console.log('Enhanced Auth Generated:');",
+									"console.log('Timestamp:', timestamp);",
+									"console.log('Nonce:', nonce);",
+									"console.log('Method:', method);",
+									"console.log('Path:', path);",
+									"console.log('Payload:', payload);",
+									"console.log('Hash:', hash);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/service/secure/users?page=1&limit=5",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "service", "secure", "users"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create User (Enhanced)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Enhanced Authentication Pre-request Script",
+									"const crypto = require('crypto-js');",
+									"",
+									"const plainSecret = pm.environment.get('plainSecret');",
+									"const clientId = pm.environment.get('clientId');",
+									"",
+									"if (!plainSecret) {",
+									"    throw new Error('plainSecret not set in environment');",
+									"}",
+									"",
+									"const timestamp = Date.now();",
+									"const nonce = crypto.lib.WordArray.random(16).toString();",
+									"const method = pm.request.method;",
+									"const url = new URL(pm.request.url.toString());",
+									"const path = url.pathname;",
+									"",
+									"const payload = `${plainSecret}:${timestamp}:${nonce}:${method}:${path}`;",
+									"const hash = crypto.SHA256(payload).toString();",
+									"",
+									"pm.request.headers.add({ key: 'X-Client-ID', value: clientId });",
+									"pm.request.headers.add({ key: 'X-Auth-Timestamp', value: timestamp.toString() });",
+									"pm.request.headers.add({ key: 'X-Auth-Nonce', value: nonce });",
+									"pm.request.headers.add({ key: 'X-Auth-Hash', value: hash });",
+									"",
+									"console.log('Enhanced Auth for POST:', { timestamp, nonce, method, path, hash });"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Enhanced Auth User\",\n  \"email\": \"enhanced-{{$timestamp}}@example.com\",\n  \"role\": \"USER\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/service/secure/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "service", "secure", "users"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🧪 Test Error Scenarios",
+			"item": [
+				{
+					"name": "Missing JWT Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/service/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "service", "users"]
+						}
+					}
+				},
+				{
+					"name": "Invalid JWT Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer invalid-token-here"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/service/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "service", "users"]
+						}
+					}
+				},
+				{
+					"name": "Missing Enhanced Headers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/service/secure/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "service", "secure", "users"]
+						}
+					}
+				},
+				{
+					"name": "Old Timestamp (Enhanced)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Use old timestamp to trigger timeout error",
+									"const crypto = require('crypto-js');",
+									"const plainSecret = pm.environment.get('plainSecret');",
+									"const clientId = pm.environment.get('clientId');",
+									"",
+									"// Use timestamp from 10 minutes ago",
+									"const timestamp = Date.now() - (10 * 60 * 1000);",
+									"const nonce = crypto.lib.WordArray.random(16).toString();",
+									"const method = pm.request.method;",
+									"const url = new URL(pm.request.url.toString());",
+									"const path = url.pathname;",
+									"",
+									"const payload = `${plainSecret}:${timestamp}:${nonce}:${method}:${path}`;",
+									"const hash = crypto.SHA256(payload).toString();",
+									"",
+									"pm.request.headers.add({ key: 'X-Client-ID', value: clientId });",
+									"pm.request.headers.add({ key: 'X-Auth-Timestamp', value: timestamp.toString() });",
+									"pm.request.headers.add({ key: 'X-Auth-Nonce', value: nonce });",
+									"pm.request.headers.add({ key: 'X-Auth-Hash', value: hash });",
+									"",
+									"console.log('Using old timestamp:', new Date(timestamp));"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/service/secure/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "service", "secure", "users"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "jwtToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "clientId",
+			"value": "main-app",
+			"type": "string"
+		},
+		{
+			"key": "plainSecret",
+			"value": "",
+			"type": "string",
+			"description": "Get this from your .env file: MAIN_APP_SERVICE_SECRET"
+		}
+	]
+}

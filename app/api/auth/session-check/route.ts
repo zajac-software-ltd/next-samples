@@ -66,10 +66,15 @@ export async function GET() {
 
       // Check if session has expired
       if (dbSession.expires < new Date()) {
-        // Clean up expired session
-        await prisma.session.delete({
-          where: { sessionToken },
-        });
+        // Clean up expired session (use deleteMany to avoid race condition)
+        try {
+          await prisma.session.deleteMany({
+            where: { sessionToken },
+          });
+        } catch (error) {
+          // Session might already be deleted by another request - ignore
+          console.log('Session cleanup race condition (safe to ignore):', error);
+        }
         return NextResponse.json({ 
           session: null,
           authenticated: false 
@@ -168,10 +173,15 @@ export async function POST(request: Request) {
 
       // Check if session has expired
       if (dbSession.expires < new Date()) {
-        // Clean up expired session
-        await prisma.session.delete({
-          where: { sessionToken },
-        });
+        // Clean up expired session (use deleteMany to avoid race condition)
+        try {
+          await prisma.session.deleteMany({
+            where: { sessionToken },
+          });
+        } catch (error) {
+          // Session might already be deleted by another request - ignore
+          console.log('Session cleanup race condition (safe to ignore):', error);
+        }
         return NextResponse.json({ 
           session: null,
           authenticated: false 
