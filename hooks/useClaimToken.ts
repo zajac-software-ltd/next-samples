@@ -8,14 +8,14 @@ interface UseClaimTokenResult {
   error: string | null
 }
 
-export function useClaimToken(sessionToken: string | null, isTemporary: boolean): UseClaimTokenResult {
+export function useClaimToken(isTemporary: boolean): UseClaimTokenResult {
   const [claimUrl, setClaimUrl] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Only fetch for temporary sessions with a valid session token
-    if (!isTemporary || !sessionToken) {
+    // Only fetch for temporary sessions
+    if (!isTemporary) {
       setClaimUrl(null)
       setIsLoading(false)
       setError(null)
@@ -27,12 +27,9 @@ export function useClaimToken(sessionToken: string | null, isTemporary: boolean)
       setError(null)
 
       try {
+        // Server reads temp-session-token cookie
         const response = await fetch('/api/auth/get-claim-token', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ sessionToken }),
         })
 
         const data = await response.json()
@@ -53,7 +50,7 @@ export function useClaimToken(sessionToken: string | null, isTemporary: boolean)
     }
 
     fetchClaimToken()
-  }, [sessionToken, isTemporary])
+  }, [isTemporary])
 
   return { claimUrl, isLoading, error }
 }

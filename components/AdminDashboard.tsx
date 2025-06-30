@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
+// import { Badge } from '@/components/ui/badge';
+import { Badge } from './ui/badge';
 import { 
   Users, 
   UserPlus, 

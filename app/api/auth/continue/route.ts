@@ -46,10 +46,9 @@ export async function GET(request: NextRequest) {
     console.log('🔑 Temporary session created for user:', user.email);
     console.log('⏰ Session expires in 1 hour');
 
-    // Return session token for client-side storage instead of setting HTTP-only cookie
-    const response = NextResponse.json({ 
+    // Build response and set HTTP-only cookie
+    const response = NextResponse.json({
       success: true,
-      sessionToken,
       user: {
         id: user.id.toString(),
         email: user.email,
@@ -59,7 +58,14 @@ export async function GET(request: NextRequest) {
       expiresAt: expiresAt.toISOString(),
       redirectTo: '/dashboard'
     });
-
+    response.cookies.set({
+      name: 'temp-session-token',
+      value: sessionToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      path: '/',
+      maxAge: 60 * 60, // 1 hour
+    });
     return response;
   } catch (err) {
     console.error('Continue without claiming error:', err);

@@ -15,13 +15,13 @@ export function ProtectedRoute({
   requiredRole,
   fallback 
 }: ProtectedRouteProps) {
-  const { user, isLoading, isAuthenticated } = useAuth()
+  const { user, isLoading, isAuthenticated, isTemporary } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
     // Only redirect if we're definitely not loading and not authenticated
     // This prevents premature redirects while checking localStorage tokens
-    if (!isLoading && !isAuthenticated) {
+    if (!isLoading && !isAuthenticated && !isTemporary) {
       // Small delay to ensure localStorage check is complete
       const timer = setTimeout(() => {
         router.push("/auth/signin")
@@ -29,7 +29,7 @@ export function ProtectedRoute({
       
       return () => clearTimeout(timer)
     }
-  }, [isLoading, isAuthenticated, router])
+  }, [isLoading, isAuthenticated, isTemporary, router])
 
   if (isLoading) {
     return (

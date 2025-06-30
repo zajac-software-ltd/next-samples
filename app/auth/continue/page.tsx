@@ -1,5 +1,6 @@
 "use client"
 
+import { signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -12,6 +13,11 @@ export default function ContinueSessionPage() {
 
   useEffect(() => {
     const handleContinueSession = async () => {
+      // Ensure any existing user session is cleared
+      await signOut({ redirect: false });
+      // Clear any existing temporary session
+      await fetch('/api/auth/logout-temp', { method: 'POST', credentials: 'include' });
+
       try {
         const token = searchParams.get('token');
         if (!token) {
@@ -20,7 +26,9 @@ export default function ContinueSessionPage() {
         }
 
         // Call the continue API
-        const response = await fetch(`/api/auth/continue?token=${token}`);
+        const response = await fetch(`/api/auth/continue?token=${token}`, {
+          credentials: 'include',
+        });
         const data = await response.json();
 
         if (!response.ok) {
@@ -28,14 +36,11 @@ export default function ContinueSessionPage() {
           return;
         }
 
-        if (data.success && data.sessionToken) {
-          // Store only the session token in localStorage (useAuth expects this format)
-          localStorage.setItem('temp-session-token', data.sessionToken);
-
-          // Redirect to dashboard
+        if (data.success) {
+        // Cookie has been set server-side; redirect to dashboard
           router.push('/dashboard');
         } else {
-          setError('Invalid response from server');
+          setError(data.error || 'Invalid response from server');
         }
       } catch (err) {
         console.error('Continue session error:', err);

@@ -25,7 +25,7 @@ export async function GET(
       )
     }
 
-    const userId = parseInt(params.id)
+    const userId = parseInt(await params.id)
     
     // Users can only access their own data, admins can access any user's data
     if (session.user.role !== "ADMIN" && parseInt(session.user.id) !== userId) {
@@ -80,7 +80,7 @@ export async function PUT(
       )
     }
 
-    const userId = parseInt(params.id)
+    const userId = parseInt(await params.id)
     const body = await request.json()
     
     // Users can only update their own data, admins can update any user's data
@@ -168,7 +168,7 @@ export async function DELETE(
       )
     }
 
-    const userId = parseInt(params.id)
+    const userId = parseInt(await params.id)
 
     // Prevent admin from deleting themselves
     if (parseInt(session.user.id) === userId) {

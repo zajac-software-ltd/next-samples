@@ -23,60 +23,30 @@ export function useAuth(): UseAuthReturn {
 
   // Check for token-based session
   useEffect(() => {
-    const checkTokenSession = async () => {
+    const checkCookieSession = async () => {
       try {
-        // Get token from localStorage
-        const token = localStorage.getItem('temp-session-token');
-        
-        if (token) {
-          // Send token in POST request body
-          const response = await fetch('/api/auth/session-check', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            body: JSON.stringify({ token }),
-          });
-          
-          if (response.ok) {
-            const data = await response.json();
-            if (data.session) {
-              setTokenSession(data.session);
-            } else {
-              // Token is invalid, remove from localStorage
-              localStorage.removeItem('temp-session-token');
-            }
-          } else {
-            // Request failed, remove invalid token
-            localStorage.removeItem('temp-session-token');
-          }
-        } else {
-          // No token in localStorage, try cookie-based check (fallback)
-          const response = await fetch('/api/auth/session-check', {
-            credentials: 'include',
-          });
-          
-          if (response.ok) {
-            const data = await response.json();
-            if (data.session) {
-              setTokenSession(data.session);
-            }
+        // Fetch session directly via httpOnly cookie
+        const response = await fetch('/api/auth/session-check', {
+          credentials: 'include',
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.session) {
+            setTokenSession(data.session);
           }
         }
       } catch (error) {
-        console.error('Token session check failed:', error);
-        // Remove potentially invalid token
-        localStorage.removeItem('temp-session-token');
+        console.error('Session cookie check failed:', error);
       } finally {
         setIsLoadingToken(false);
       }
     };
 
-    // Only check for token session if NextAuth session is not present or still loading
+    // Only check for token session once NextAuth has settled and no credentials session
     if (!nextAuthSession && status !== 'loading') {
-      checkTokenSession();
-    } else {
+      checkCookieSession();
+    } else if (nextAuthSession) {
+      // Credentials session present, skip token check
       setIsLoadingToken(false);
     }
   }, [nextAuthSession, status]);
@@ -100,7 +70,7 @@ export function useAuth(): UseAuthReturn {
       isTemporary: false,
     };
   } else if (tokenSession) {
-    // Token-based session
+    // Token-based session via cookie
     currentSession = tokenSession;
   }
 

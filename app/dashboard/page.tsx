@@ -7,9 +7,8 @@ import { useClaimToken } from "@/hooks/useClaimToken"
 export default function DashboardPage() {
   const { user, isTemporary, session } = useAuth()
   
-  // Get the current session token for temporary sessions
-  const sessionToken = typeof window !== 'undefined' ? localStorage.getItem('temp-session-token') : null
-  const { claimUrl, isLoading: isLoadingClaimUrl } = useClaimToken(sessionToken, isTemporary)
+  // Fetch claim URL via HTTP-only cookie for temporary sessions
+  const { claimUrl, isLoading: isLoadingClaimUrl } = useClaimToken(isTemporary)
 
   return (
     <ProtectedRoute>

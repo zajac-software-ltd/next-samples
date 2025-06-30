@@ -152,7 +152,7 @@ export async function POST(request: Request) {
       });
     }
 
-    // Check for token-based session from localStorage
+    // Check for token-based session via request body
     if (sessionToken) {
       // Validate session in database
       const dbSession = await prisma.session.findUnique({
@@ -208,11 +208,19 @@ export async function POST(request: Request) {
         isTemporary: true,
         expiresAt: dbSession.expires,
       };
-      
-      return NextResponse.json({ 
-        session,
-        authenticated: true 
+      // Return JSON and set temp-session-token as httpOnly cookie
+      const response = NextResponse.json(
+        { session, authenticated: true }
+      );
+      response.cookies.set({
+        name: 'temp-session-token',
+        value: sessionToken,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+        maxAge: Math.floor((dbSession.expires.getTime() - Date.now()) / 1000),
       });
+      return response;
     }
     
     return NextResponse.json({ 

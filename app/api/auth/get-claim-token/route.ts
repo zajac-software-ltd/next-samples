@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers'
 
 // Get the original claim token for a temporary session
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
-    const { sessionToken } = await request.json();
-    
+    // Read session token from HTTP-only cookie
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get('temp-session-token')?.value;
     if (!sessionToken) {
       return NextResponse.json({ error: 'Session token required' }, { status: 400 });
     }
